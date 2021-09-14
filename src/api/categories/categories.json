@@ -1,0 +1,47 @@
+[
+  {
+    "name": "ToDo",
+    "items": [
+      {
+        "title": "Clean house",
+        "dateAdded": 1631610995000,
+        "category": "ToDo"
+      },
+      {
+        "title": "Car wash",
+        "dateAdded": 1631619725000,
+        "category": "ToDo"
+      }
+    ]
+  },
+  {
+    "name": "In progress",
+    "items": [
+      {
+        "title": "Write Todo App",
+        "dateAdded": 1631604362000,
+        "category": "In progress"
+      }
+    ]
+  },
+  {
+    "name": "On Hold",
+    "items": [
+      {
+        "title": "Koutsompolis app",
+        "dateAdded": 1631431562000,
+        "category": "On Hold"
+      }
+    ]
+  },
+  {
+    "name": "Completed",
+    "items": [
+      {
+        "title": "Drink Coffee",
+        "dateAdded": 1628940997000,
+        "category": "Completed"
+      }
+    ]
+  }
+]
