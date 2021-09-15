@@ -5,17 +5,17 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class TimeDifferencePipe implements PipeTransform {
 
-  transform(timestamp: number): string {
+  transform(timestamp?: number): string {
     if (!timestamp) {
       return '';
     }
-    const dateAdded = new Date(timestamp);
+    const dateUpdated = new Date(timestamp);
     const timeNow = new Date();
-    const diffInYears = timeNow.getFullYear() - dateAdded.getFullYear();
-    const diffInMonths = timeNow.getMonth() - dateAdded.getMonth();
-    const diffInDays = timeNow.getDay() - dateAdded.getDay();
-    const diffInHours = timeNow.getHours() - dateAdded.getHours();
-    const diffInMinutes = timeNow.getMinutes() - dateAdded.getMinutes();
+    const diffInYears = timeNow.getFullYear() - dateUpdated.getFullYear();
+    const diffInMonths = timeNow.getMonth() - dateUpdated.getMonth();
+    const diffInDays = timeNow.getDay() - dateUpdated.getDay();
+    const diffInHours = timeNow.getHours() - dateUpdated.getHours();
+    const diffInMinutes = timeNow.getMinutes() - dateUpdated.getMinutes();
 
     let diff: number | null;
     let unitToReturn: string;
@@ -51,7 +51,7 @@ export class TimeDifferencePipe implements PipeTransform {
     }
 
     return diff
-      ? `Added ${diff} ${unitToReturn} ago`
-      : `Added a few ${unitToReturn} ago`;
+      ? `${diff} ${unitToReturn} ago`
+      : `a few ${unitToReturn} ago`;
   }
 }

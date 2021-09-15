@@ -3,11 +3,18 @@
     <div
       *ngFor="let category of categories"
       class="to-do-category col-md m-2 p-2 bg-light border rounded"
+      (drop)="itemDropped($event, category.name)"
+      (dragover)="allowDrop($event)"
     >
       <div class="d-flex align-items-center justify-content-between">
         <h5 class="m-0">{{ category.name }}</h5>
         <a
-          (click)="onAddItemClick(template, category.name)"
+          (click)="
+            onAddItemClick(saveItemTemplate, {
+              title: '',
+              category: category.name
+            })
+          "
           class="btn btn-link"
         >
           <i class="fa fa-plus"></i>
@@ -16,21 +23,23 @@
       <div class="row">
         <div class="col">
           <to-do-item
-            *ngFor="let item of category.items"
+            *ngFor="let item of getItemsByCategory(category.name)"
+            (editClicked)="onAddItemClick(saveItemTemplate, $event)"
+            (deleteClicked)="onDeleteItemClick($event)"
             [item]="item"
           ></to-do-item>
         </div>
       </div>
     </div>
   </div>
-  <ng-template #template>
+  <ng-template #saveItemTemplate>
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
       </div>
       <div class="modal-body">
         <form>
-          <div class="form-group row">
+          <div class="form-group row pb-2">
             <label for="titleInput" class="col-sm-2 col-form-label"
               >Title</label
             >
@@ -40,15 +49,23 @@
                 class="form-control"
                 id="titleInput"
                 [(ngModel)]="itemToSave.title"
+                (input)="resetErrorMessage()"
                 name="title"
               />
+              <div
+                *ngIf="modalErrorMessage"
+                class="alert alert-danger p-2"
+                role="alert"
+              >
+                {{ modalErrorMessage }}
+              </div>
             </div>
           </div>
           <div class="form-group row">
             <label for="inputCategory" class="col-sm-2 col-form-label"
               >Category</label
             >
-            <div class="col-sm-10">
+            <div class="col-sm-10 pb-2">
               <select
                 [(ngModel)]="itemToSave.category"
                 name="category"
@@ -64,13 +81,47 @@
               </select>
             </div>
           </div>
+          <div class="form-group pt-2">
+            <label class="pb-2" for="itemDescription">Description</label>
+            <textarea
+              [(ngModel)]="itemToSave.description"
+              name="description"
+              class="form-control"
+              id="itemDescription"
+              rows="3"
+            ></textarea>
+          </div>
+          <div class="form-group d-flex align-items-center pt-2">
+            <input
+              class="preview-check-input"
+              type="checkbox"
+              [(ngModel)]="showSaveModalPreview"
+              name="showSaveModalPreview"
+              id="previewCheckbox"
+            />
+            <label class="preview-check-label" for="previewCheckbox">
+              Show preview
+            </label>
+          </div>
         </form>
+        <to-do-item
+          *ngIf="showSaveModalPreview"
+          [item]="itemToSave"
+          [previewMode]="true"
+        ></to-do-item>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+        <button
+          (click)="closeModal()"
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+        >
           Close
         </button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button (click)="saveItem()" type="button" class="btn btn-primary">
+          Save changes
+        </button>
       </div>
     </div>
   </ng-template>

@@ -1,11 +1,37 @@
-<div class="card">
+<div draggable="true" (dragstart)="dragStart($event)" class="card">
   <div class="card-body">
-    <div class="card-title">{{ item.title }}</div>
-    <div *ngIf="item.dateAdded" class="card-subtitle mb-2 text-muted">
-      {{ item.dateAdded | timeDifference }}
+    <div class="card-title d-flex justify-content-between">
+      <span>{{ item.title }}</span>
+      <div *ngIf="!previewMode" class="d-flex card-title-actions">
+        <a (click)="confirmDelete(deleteItemTemplate)" class="link-primary">
+          <i class="fa fa-times"></i>
+        </a>
+        <a (click)="onEditClick()" class="link-primary">
+          <i class="fa fa-edit"></i>
+        </a>
+      </div>
+    </div>
+    <div class="card-subtitle mb-2 text-muted">
+      {{ item.timesUpdated > 1 ? "Updated" : "Added" }}
+      {{ item.dateUpdated | timeDifference }}
     </div>
     <div class="card-text">
       {{ item.description }}
     </div>
   </div>
+  <ng-template #deleteItemTemplate>
+    <div class="modal-body text-center">
+      <p>Are you sure you want to delete the item titled "{{ item.title }}"?</p>
+      <button type="button" class="btn btn-danger" (click)="onDeleteClick()">
+        Yes
+      </button>
+      <button
+        type="button"
+        class="btn btn-default"
+        (click)="deleteModal?.hide()"
+      >
+        No
+      </button>
+    </div>
+  </ng-template>
 </div>

@@ -1,0 +1,15 @@
+.card-title-actions a {
+    display: flex;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding-top: 1px;
+}
+
+.card-title-actions a:hover {
+    text-decoration: none;
+}
+
+.card-title-actions a:first-child {
+    margin-right: 0.5rem;
+    padding-top: 0px;
+}

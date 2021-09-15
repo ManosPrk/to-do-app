@@ -1,6 +1,8 @@
 export interface IToDoItem {
+    id: number
     title: string
-    dateAdded?: number
+    dateUpdated: number
     description?: string
     category: string
+    timesUpdated: number
 }
