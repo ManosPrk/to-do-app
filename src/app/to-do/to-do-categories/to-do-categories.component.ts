@@ -27,6 +27,7 @@ export class ToDoCategoriesComponent implements OnInit, OnDestroy {
   showSaveModalPreview = false;
   categoriesSubcription!: Subscription;
   itemSubcription!: Subscription;
+  modalSubscription!: Subscription;
   constructor(private categoryService: ToDoCategoriesService, private itemService: ToDoItemService, private modalService: BsModalService) { }
 
   ngOnInit(): void {
@@ -47,6 +48,8 @@ export class ToDoCategoriesComponent implements OnInit, OnDestroy {
           this.items = items;
         }
       });
+    this.modalSubscription = this.modalService.onHide
+      .subscribe(() => this.resetItemToSaveModal())
   }
 
   getItemsByCategory(categoryName: string) {
@@ -72,6 +75,14 @@ export class ToDoCategoriesComponent implements OnInit, OnDestroy {
     this.itemToSave.dateUpdated = new Date().getTime();
     if (this.itemToSave.id) {
       const existingItemIdx = this.items.findIndex(i => i.id === this.itemToSave.id);
+      if (
+        this.items[existingItemIdx]?.category === this.itemToSave.category &&
+        this.items[existingItemIdx]?.title === this.itemToSave.title &&
+        this.items[existingItemIdx].description === this.itemToSave.description
+      ) {
+        this.closeModal();
+        return;
+      }
       this.items.splice(existingItemIdx, 1, {
         ...this.itemToSave as IToDoItem,
       })
@@ -82,7 +93,6 @@ export class ToDoCategoriesComponent implements OnInit, OnDestroy {
       })
     }
     this.closeModal();
-    this.resetItemToSave();
   }
 
   onDeleteItemClick(id: number) {
@@ -91,7 +101,7 @@ export class ToDoCategoriesComponent implements OnInit, OnDestroy {
     this.items.splice(itemToDeleteIdx, 1);
   }
 
-  resetItemToSave() {
+  resetItemToSaveModal() {
     this.itemToSave = {
       id: 0,
       title: '',
@@ -100,6 +110,7 @@ export class ToDoCategoriesComponent implements OnInit, OnDestroy {
       timesUpdated: 0,
       dateUpdated: 0,
     };
+    this.showSaveModalPreview = false;
   }
 
   resetErrorMessage() {
@@ -129,5 +140,6 @@ export class ToDoCategoriesComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.categoriesSubcription.unsubscribe();
     this.itemSubcription.unsubscribe();
+    this.modalSubscription.unsubscribe()
   }
 }
