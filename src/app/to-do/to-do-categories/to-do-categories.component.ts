@@ -113,10 +113,10 @@ export class ToDoCategoriesComponent implements OnInit, OnDestroy {
   }
 
   itemDropped(event: DragEvent, categoryName: string) {
-    const itemId = parseInt(event.dataTransfer?.getData('itemId') || '');
-    if (!itemId) return;
+    if (!event.dataTransfer?.getData('itemId')) return;
+    const itemId = parseInt(event.dataTransfer?.getData('itemId'));
     const item = this.items.find(i => i.id === itemId);
-    if (!item) return;
+    if (!item || item.category === categoryName) return;
     item.category = categoryName;
     item.dateUpdated = new Date().getTime();
     item.timesUpdated++;
