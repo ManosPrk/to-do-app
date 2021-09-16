@@ -1,4 +1,8 @@
-<div draggable="true" (dragstart)="dragStart($event)" class="card">
+<div
+  [draggable]="!previewMode"
+  (dragstart)="!previewMode && dragStart($event)"
+  class="card"
+>
   <div class="card-body">
     <div class="card-title d-flex justify-content-between">
       <span>{{ item.title }}</span>

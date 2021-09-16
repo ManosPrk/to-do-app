@@ -16,7 +16,7 @@ export class ToDoCategoriesComponent implements OnInit, OnDestroy {
   modalErrorMessage = '';
   categories: IToDoCategory[] = [];
   items: IToDoItem[] = [];
-  itemToSave = {
+  itemToSave: IToDoItem = {
     id: 0,
     title: '',
     category: '',
@@ -58,6 +58,15 @@ export class ToDoCategoriesComponent implements OnInit, OnDestroy {
         .filter(i => i.category === categoryName)
         .sort((a, b) => a.dateUpdated - b.dateUpdated)
     ];
+  }
+
+  get previewItem(): IToDoItem {
+    return {
+      ...this.itemToSave,
+      title: this.itemToSave.title || "Placeholder text",
+      dateUpdated: new Date().getTime(),
+      timesUpdated: this.itemToSave.timesUpdated + 1
+    }
   }
 
   onAddItemClick(template: TemplateRef<any>, item: any) {
