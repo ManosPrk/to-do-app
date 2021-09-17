@@ -1,0 +1,50 @@
+{
+  "categories": [
+    {
+      "name": "ToDo",
+      "id": 1
+    },
+    {
+      "name": "In progress",
+      "id": 2
+    },
+    {
+      "name": "On Hold",
+      "id": 3
+    },
+    {
+      "name": "Completed",
+      "id": 4
+    }
+  ],
+  "items": [
+    {
+      "id": 2,
+      "title": "Clean house",
+      "dateUpdated": 1631801295209,
+      "category": "ToDo",
+      "timesUpdated": 7
+    },
+    {
+      "id": 3,
+      "title": "Write Todo App",
+      "dateUpdated": 1631801255382,
+      "category": "In progress",
+      "timesUpdated": 3
+    },
+    {
+      "id": 4,
+      "title": "Koutsompolis app",
+      "dateUpdated": 1631431562000,
+      "category": "On Hold",
+      "timesUpdated": 1
+    },
+    {
+      "id": 5,
+      "title": "Drink Coffee",
+      "dateUpdated": 1628940997000,
+      "category": "Completed",
+      "timesUpdated": 1
+    }
+  ]
+}
