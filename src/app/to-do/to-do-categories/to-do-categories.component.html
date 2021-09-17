@@ -9,12 +9,7 @@
       <div class="d-flex align-items-center justify-content-between">
         <h5 class="m-0">{{ category.name }}</h5>
         <a
-          (click)="
-            onAddItemClick(saveItemTemplate, {
-              title: '',
-              category: category.name
-            })
-          "
+          (click)="onAddItemClick(saveItemTemplate, category.name)"
           class="btn btn-link"
         >
           <i class="fa fa-plus"></i>
@@ -24,7 +19,7 @@
         <div class="col">
           <to-do-item
             *ngFor="let item of getItemsByCategory(category.name)"
-            (editClicked)="onAddItemClick(saveItemTemplate, $event)"
+            (editClicked)="onEditItemClick(saveItemTemplate, $event)"
             (deleteClicked)="onDeleteItemClick($event)"
             [item]="item"
           ></to-do-item>

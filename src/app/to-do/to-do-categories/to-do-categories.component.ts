@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Subscription } from 'rxjs';
 import { IToDoItem } from '../to-do-item/to-do-item';
 import { ToDoItemService } from '../to-do-item/to-do-item.service';
 import { IToDoCategory } from './to-do-categories';
@@ -11,7 +10,7 @@ import { ToDoCategoriesService } from './to-do-categories.service';
   templateUrl: './to-do-categories.component.html',
   styleUrls: ['./to-do-categories.component.css']
 })
-export class ToDoCategoriesComponent implements OnInit, OnDestroy {
+export class ToDoCategoriesComponent implements OnInit {
   modalRef?: BsModalRef;
   modalErrorMessage = '';
   categories: IToDoCategory[] = [];
@@ -25,14 +24,10 @@ export class ToDoCategoriesComponent implements OnInit, OnDestroy {
     dateUpdated: 0,
   };
   showSaveModalPreview = false;
-  categoriesSubcription!: Subscription;
-  itemSubcription!: Subscription;
-  modalSubscription!: Subscription;
   constructor(private categoryService: ToDoCategoriesService, private itemService: ToDoItemService, private modalService: BsModalService) { }
 
   ngOnInit(): void {
-    this.categoriesSubcription = this
-      .categoryService
+    this.categoryService
       .getCategories()
       .subscribe({
         next: (categories) => {
@@ -40,15 +35,14 @@ export class ToDoCategoriesComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.itemSubcription = this
-      .itemService
+    this.itemService
       .getItems()
       .subscribe({
         next: (items) => {
           this.items = items;
         }
       });
-    this.modalSubscription = this.modalService.onHide
+    this.modalService.onHide
       .subscribe(() => this.resetItemToSaveModal())
   }
 
@@ -69,9 +63,20 @@ export class ToDoCategoriesComponent implements OnInit, OnDestroy {
     }
   }
 
-  onAddItemClick(template: TemplateRef<any>, item: any) {
+  onAddItemClick(template: TemplateRef<any>, categoryName: string) {
+    this.itemToSave.category = categoryName;
+    this.modalRef = this.modalService.show(template);
+  }
+
+  onEditItemClick(template: TemplateRef<any>, item: IToDoItem) {
     this.itemToSave = { ...item };
     this.modalRef = this.modalService.show(template);
+  }
+
+  onDeleteItemClick(id: number) {
+    this.itemService
+      .deleteItem(id)
+      .subscribe(() => this.items = this.items.filter(i => i.id !== id));
   }
 
   saveItem() {
@@ -92,22 +97,15 @@ export class ToDoCategoriesComponent implements OnInit, OnDestroy {
         this.closeModal();
         return;
       }
-      this.items.splice(existingItemIdx, 1, {
-        ...this.itemToSave as IToDoItem,
-      })
+      this.itemService
+        .updateItem(this.itemToSave)
+        .subscribe(item => this.items.splice(existingItemIdx, 1, item));
     } else {
-      this.items.push({
-        ...this.itemToSave as IToDoItem,
-        id: this.items.length + 1,
-      })
+      this.itemService
+        .addItem(this.itemToSave)
+        .subscribe(item => this.items.push(item));
     }
     this.closeModal();
-  }
-
-  onDeleteItemClick(id: number) {
-    const itemToDeleteIdx = this.items
-      .findIndex(i => i.id === id);
-    this.items.splice(itemToDeleteIdx, 1);
   }
 
   resetItemToSaveModal() {
@@ -135,20 +133,19 @@ export class ToDoCategoriesComponent implements OnInit, OnDestroy {
   itemDropped(event: DragEvent, categoryName: string) {
     if (!event.dataTransfer?.getData('itemId')) return;
     const itemId = parseInt(event.dataTransfer?.getData('itemId'));
-    const item = this.items.find(i => i.id === itemId);
-    if (!item || item.category === categoryName) return;
-    item.category = categoryName;
-    item.dateUpdated = new Date().getTime();
-    item.timesUpdated++;
+    const itemIdx = this.items.findIndex(i => i.id === itemId);
+    if (!this.items[itemIdx] || this.items[itemIdx].category === categoryName) return;
+    this.itemService
+      .updateItem({
+        ...this.items[itemIdx],
+        category: categoryName,
+        dateUpdated: new Date().getTime(),
+        timesUpdated: this.items[itemIdx].timesUpdated + 1
+      })
+      .subscribe(item => this.items.splice(itemIdx, 1, item));
   }
 
   allowDrop(event: DragEvent) {
     event.preventDefault();
-  }
-
-  ngOnDestroy() {
-    this.categoriesSubcription.unsubscribe();
-    this.itemSubcription.unsubscribe();
-    this.modalSubscription.unsubscribe()
   }
 }

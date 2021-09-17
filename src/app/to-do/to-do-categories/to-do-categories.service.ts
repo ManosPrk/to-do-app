@@ -8,7 +8,7 @@ import { IToDoCategory } from './to-do-categories';
   providedIn: 'root'
 })
 export class ToDoCategoriesService {
-  categoryUrl: string = 'api/categories/categories.json';
+  categoryUrl: string = 'api/categories';
 
   constructor(private http: HttpClient) { }
 
