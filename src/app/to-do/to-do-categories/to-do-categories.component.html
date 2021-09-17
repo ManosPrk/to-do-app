@@ -1,28 +1,30 @@
-<div class="container-fluid h-100">
-  <div class="row h-100">
+<div class="container-fluid">
+  <div class="row">
     <div
       *ngFor="let category of categories"
-      class="to-do-category col-md m-2 p-2 bg-light border rounded"
+      class="to-do-category p-2 col-md-12 col-lg-6 col-xl-3"
       (drop)="itemDropped($event, category.name)"
       (dragover)="allowDrop($event)"
     >
-      <div class="d-flex align-items-center justify-content-between">
-        <h5 class="m-0">{{ category.name }}</h5>
-        <a
-          (click)="onAddItemClick(saveItemTemplate, category.name)"
-          class="btn btn-link"
-        >
-          <i class="fa fa-plus"></i>
-        </a>
-      </div>
-      <div class="row">
-        <div class="col">
-          <to-do-item
-            *ngFor="let item of getItemsByCategory(category.name)"
-            (editClicked)="onEditItemClick(saveItemTemplate, $event)"
-            (deleteClicked)="onDeleteItemClick($event)"
-            [item]="item"
-          ></to-do-item>
+      <div class="p-2 bg-light border rounded">
+        <div class="d-flex align-items-center justify-content-between">
+          <h5 class="m-0">{{ category.name }}</h5>
+          <a
+            (click)="onAddItemClick(saveItemTemplate, category.name)"
+            class="btn btn-link"
+          >
+            <i class="fa fa-plus"></i>
+          </a>
+        </div>
+        <div class="row">
+          <div class="col">
+            <to-do-item
+              *ngFor="let item of getItemsByCategory(category.name)"
+              (editClicked)="onEditItemClick(saveItemTemplate, $event)"
+              (deleteClicked)="onDeleteItemClick($event)"
+              [item]="item"
+            ></to-do-item>
+          </div>
         </div>
       </div>
     </div>
