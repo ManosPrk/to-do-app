@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { IToDoItem } from './to-do-item';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ToDoItemService {
-  itemUrl: string = 'api/items';
+  itemUrl = `${environment.SERVER_URL}/items`;
 
   constructor(private http: HttpClient) { }
 

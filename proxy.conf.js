@@ -1,15 +1,10 @@
-require('dotenv').config();
-
 const PROXY_CONFIG = [
     {
         context: [
             '/api'
         ],
-        target: process.env.SERVER_URL,
+        target: "http://127.0.0.1:3000",
         secure: false,
-        bypass: (req) => {
-            req.headers['x-forwarded-proto'] = 'https';
-        }
     }
 ]
 

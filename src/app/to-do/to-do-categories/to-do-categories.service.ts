@@ -3,12 +3,12 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from "rxjs";
 import { tap, catchError } from 'rxjs/operators';
 import { IToDoCategory } from './to-do-categories';
-
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class ToDoCategoriesService {
-  categoryUrl: string = 'api/categories';
+  categoryUrl = `${environment.SERVER_URL}/categories`;
 
   constructor(private http: HttpClient) { }
 
