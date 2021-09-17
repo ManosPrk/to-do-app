@@ -28,6 +28,7 @@ chrome-profiler-events*.json
 
 # misc
 .env
+/mockApi
 /.sass-cache
 /connect.lock
 /coverage
